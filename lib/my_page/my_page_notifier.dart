@@ -37,7 +37,23 @@ class MyPageNotifier extends StateNotifier<MyPageState> with LocatorMixin {
   @override
   void initState() {
     //初期化時に呼び出される
+    List<Map<String, String>> newRecord = [];
+    final dateTime = DateTime.now();
+    final day = '${dateTime.year}年${dateTime.month}月${dateTime.day}日';
+
+    for (var i = 0; i < 3; i++) {
+      _saveWeight('${70 + i}');
+      _saveComment('comment ${i + 0}');
+      final formRecord = {
+        'weight': state.weight,
+        'comment': state.comment,
+        'day': day,
+      };
+      newRecord.add(formRecord);
+    }
+    state = state.copyWith(record: newRecord);
   }
+
   void pushButton() {
     print('notifier!!');
     state = state.copyWith(count: state.count + 1);
@@ -94,8 +110,8 @@ class MyPageNotifier extends StateNotifier<MyPageState> with LocatorMixin {
 
   void delete(int index) {
     print('delete ${state.record[index]}');
-    state.record.removeAt(index);
     final newRecord = List<Map<String, String>>.from(state.record);
+    newRecord.removeAt(index);
     state = state.copyWith(record: newRecord);
   }
 
